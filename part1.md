@@ -100,3 +100,96 @@ $$
     - They typically take the form of $\text{rate of change in stuff}=\cdots$. 
     - We can construct models based on *hypotheses* about how we think biology works. We then study the model behavior to validate or reject our model. 
     - Most models will not be this simple, so we will need new mathematical tools to study their behavior. This is what our class is about!  
+
+### Another example: the bacterial chemostat
+
+- During our “warmup” chapter, we are just seeing some lessons to motivate what we will study in the rest of the class.
+
+- Next example is a more detailed model of growing bacteria in a chamber or flask. 
+
+  
+
+![](fig42.png)
+
+- If we want to take out bacteria regularly, (for instance, to do experiments, or use in some product), we need to also continuously grow them. One convenient way to do this is to keep them in a chamber and continuously flow in stock nutrients and flow out some bacteria.
+
+- We want to design the system such that 
+
+  - The flow is not so great that all/most bacteria are flowed out
+  - The flow is great enough that bacteria do grow
+
+- That is, we want a balance of flowing nutrients in and flowing bacteria out so that we get a stable population of bacteria. Not obvious how to do this without modeling.
+
+- What do we want to model? We have a few variables and parameters.
+
+  - $C$ is the nutrient concentration in the chamber. It has units mass/volume
+  - $C_0$ is the concentration in the reservoir, also mass/volume.
+  - $N$ is the population *density* of bacteria, number/volume.
+  - $V$ is the volume of the chamber.
+  - $F$ is the flow in and out, importantly, of units volume/time.
+  - $K$ is the reproduction rate of bacteria (per bacteria), in units of 1/time.
+
+- Let’s attempt a model. Let’s assume that the chamber is well stirred so all the bacteria have an equal chance of being removed. Then we can write
+  $$
+  \frac{dN}{dt}= \text{change in bacteria concentration} = \text{reproduction} - \text{flow out}
+  $$
+
+- What are these terms? We can take a guess
+  $$
+  \frac{dN}{dt}= k N - F N.
+  $$
+
+- Now, let us do our unit check. On the left we have change in density over time, this has units of (number)/(volume * time). Everything on the right must have this too. 
+
+- The first time is (1/time) (number/volume), so we are good.
+
+- What about the second term? (volume/time)*(number)/volume = number/time. 
+
+- We accidentally wrote down the NUMBER of bacteria leaving rather than the “density”.
+
+- To fix this, we rescale by the volume and we see the term with the right units is 
+  $$
+  \text{bacteria concentration flow out} = \frac{FN}{V}.
+  $$
+
+- Our units are right, but is our model? Is the reproduction rate constant? Probably not. 
+
+- Call $C$ the concentration of nutrient in the chamber. Then, more likely,
+  $$
+  \text{bacteria concentration reproduction rate} = K(C)N
+  $$
+
+- How does $C$ change? We can write down a differnetial equation for it
+  $$
+  \frac{dC}{dt} = -\alpha K(C)N - \frac{FC}{V}+\frac{FC_0}{V}.
+  $$
+
+- I’ve introduced a new paramter, $\alpha$ called the “yield”. What units must $\alpha$ have? $dC/dt$ is change in concentration over time, so it is mass/(volume*time). The first term is (units of alpha) * (1/time) * (number / volume). Therefore, the units of alpha must be mass/number. That is, alpha represents how much mass each bacteria eats. 
+
+- We now have our model!
+  $$
+  \frac{dN}{dt} = K(C) N - \frac{FN}{V}\\
+  \frac{dC}{dt} = -\alpha K(C) N - \frac{FN}{V} + \frac{FC_0}{V}.\\
+  $$
+
+- This is all a bit confusing but one way to think of it is $NV$ is the total number of bacteria in the chamber and $CV$ is the total mass of nutrient in the chamber. 
+
+- What do we do with this model? Study its behavior! We want to know how to achieve a steady value of $N$. 
+
+- First, we have to pick a form for $K(C)$. One very common form is called **Michaelis-Menten**, and takes the form
+  $$
+  K(C) = \frac{K_\max C}{K_n+C}.
+  $$
+
+​	![](fig43.png)
+
+- This is a form that saturates to value $K_\max$ and the value $K_n$ determines how quickly it saturates.
+
+- Plugging this in, our model becomes
+
+- $$
+  \frac{dN}{dt} = \frac{K_\max C}{K_n+C} N - \frac{FN}{V}\\\frac{dC}{dt} = -\alpha\frac{K_\max C}{K_n+C} N - \frac{FN}{V} + \frac{FC_0}{V}.\\
+  $$
+
+- This is complicated! A system of non-linear ODEs. How do we understand its behavior? 
+- This is the stuff our class will discuss. How can we simplify the equations to make them easier to digest? Can we characterize the behavior as $t\to\infty$? Can we program a computer to simulate these equations?
