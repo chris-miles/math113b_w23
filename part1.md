@@ -169,7 +169,7 @@ $$
 - We now have our model!
   $$
   \frac{dN}{dt} = K(C) N - \frac{FN}{V}\\
-  \frac{dC}{dt} = -\alpha K(C) N - \frac{FN}{V} + \frac{FC_0}{V}.\\
+  \frac{dC}{dt} = -\alpha K(C) N - \frac{FC}{V} + \frac{FC_0}{V}.\\
   $$
 
 - This is all a bit confusing but one way to think of it is $NV$ is the total number of bacteria in the chamber and $CV$ is the total mass of nutrient in the chamber. 
@@ -188,7 +188,7 @@ $$
 - Plugging this in, our model becomes
 
 - $$
-  \frac{dN}{dt} = \frac{K_\max C}{K_n+C} N - \frac{FN}{V}\\\frac{dC}{dt} = -\alpha\frac{K_\max C}{K_n+C} N - \frac{FN}{V} + \frac{FC_0}{V}.\\
+  \frac{dN}{dt} = \frac{K_\max C}{K_n+C} N - \frac{FN}{V}\\\frac{dC}{dt} = -\alpha\frac{K_\max C}{K_n+C} N - \frac{FC}{V} + \frac{FC_0}{V}.\\
   $$
 
 - This is complicated! A system of non-linear ODEs. How do we understand its behavior? 
