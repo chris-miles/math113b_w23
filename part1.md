@@ -295,6 +295,7 @@ $$
 
 
 - This tells us the full story! If we start in the region between $(0,1)$ we would go to 1. And if in $(1,2)$ we would also go to 1. So 1 is a "stable equilibrium". We would also call 0, 2 "unstable" equilibria. 
+
 - Therefore, we can draw a sketch of all of the possible solutions, for different initial conditions.<img src="yplot2.png" alt="y" style="zoom:50%;" />
 
 - I want to show the stability in a slightly more mathematical way. 
@@ -331,7 +332,15 @@ $$
 
 - We can see this test works on our first example. For that one, $f'(1)<0$ but $f'(2)>0$. 
 
-- Therefore, the first derivative (or "linearization") at an equilibrium determines the stability. We derived this by thinking about the behavior "nearby".
+- Therefore, the first derivative (or "linearization") at an equilibrium determines the stability. We derived this by thinking about the behavior "nearby". 
+
+- That is, **the punchline of this section is that: **nearby an equilibrium $\bar{y}$, the behavior of our system “looks like” linear behavior $y’= J y$ , where $J=f’(\bar{y})$. 
+
+- Matthew asked a nice question about whether we can interpret this as a “ball rolling down a hill” like I’ve mentioned before. It turns out there is a *literal* interpretation in this direction. In physics, we know Newton’s law says  $m x(t)'' = f$ , but for very small stuff (at the scale of molecular biology), it’s a reasonable approximation to describe stuff’s motion as $x’ =f$. The second ingredient we need is that *force is the negative derivative of potential energy (height)*. So if we call $-\int f dx = h(x)$  then $dx/dt=-h’(x)$. In the example we took in class, $f = x(2-x)(1-x)$ so $\int f dx$ (with any +C) is $-h = -x^4/4+x^3-x^2$. What does this look like? 
+
+  ![](ballroll.png)
+
+- Here we can see the ball would get stuck at $x=0, x=1,x=2$ (our equilibria), but only would roll back to $x=1$, our stable equilibria. Therefore, our intuition about ball-rolling agrees with actual physics about ball rolling! 
 
   ### Systems of two first-order equations
 
@@ -341,4 +350,151 @@ $$
   dy/dt = g(x,y).
   $$
 
-- How do we expand these ideas to this setup? What does a first derivative mean? Each function has multiple first derivatives, $\partial_x f(x,y)$ and $\partial_y f(x,y)$. It'll be the same intuition, just a bit messier. 
+- How do we expand these ideas to this setup? What does an equilibrium look like? What does a first derivative mean? Each function has multiple first derivatives, $\partial_x f(x,y)$ and $\partial_y f(x,y)$. It'll be the same intuition, just a bit messier. 
+
+- An **equilibrium** for this system is a pair $(\bar{x},\bar{y})$ that *simultaneously* satisfy $f(\bar{x},\bar{y})=0$ and $g(\bar{x},\bar{y})=0$. 
+
+- Ex, $x’ = x^2+xy-x$ and $y’=xy-y^2-y$. What are the equilibria? $(0,0)$ $(1,0)$ and $(0,-1)$. We will later discuss a better strategy for solving these but for right now it’s just algebra!
+
+- We can repeat the exact same idea: “zoom in” on some equilibria, and Taylor expand both $f$ and $g$ nearby. The punchline ends up being this: nearby the equilibria, the system looks like 
+  $$
+  dx/dt = J_{11} x + J_{12} y \\ 
+  dy/dt =  J_{21} x + J_{22} y
+  $$
+  where $J$ are elements of the *Jacobian* matrix
+  $$
+  J = \begin{bmatrix} J_{11}& J_{12} \\ J_{21} & J_{22} \\  \end{bmatrix} = \begin{bmatrix} \partial_x f & \partial_y f\\ \partial_x g & \partial_y g \\  \end{bmatrix}\big|_{x=\bar{x},y=\bar{y}}.
+  $$
+
+- Why do we write it this way? Call $\vec{x}(t) =[x(t),y(t)]$, then nearby the equilibria, our system “looks like”
+  $$
+  \frac{d}{dt} \vec{x} = J \vec{x}.
+  $$
+
+- Therefore, we need to understand the behavior of systems like these! It turns out the behavior of these is determined by the **eigenvalues** of the matrix $J$. 
+
+- Remember that eigenvalues of a matrix $J$ are defined by the numbers such that $J\vec{v} = \lambda \vec{v}$, where $\vec{v}$ are called **eigenvectors**. We can find the *eigenvalues* by solving the characteristic equation $\det(\lambda I - J)=0$. For a 2D system, this is a **quadratic** equation.
+
+  ## Solutions to linear systems of differential equations 
+
+  
+
+- We could spend weeks on this topic but I want to give the executive summary so we can move on. 
+
+- Suppose we have the system 
+  $$
+  \frac{d}{dt} \vec{x} = J \vec{x}.
+  $$
+
+- For simplicity I will call $ J = \begin{bmatrix} a& b\\  c&d\end{bmatrix}$. 
+
+-  What do solutions look like? $J$ has 2 eigenvalues (solutions to a quadratic equation). 
+
+  $$\det (\lambda I - J) = (\lambda - d)(\lambda - a) - bc = \lambda^2 - (a+d)\lambda + (ad-bc).$$ 
+
+* A nice observation: note that the trace and determinant are $T = \operatorname{tr} J = a+d$ and the determinant are $D = \det J = ad-bc$. So actually our quadratic equation is $0 = \lambda^2 - T\lambda - D$. 
+
+* Therefore the eigenvalues only depend on the trace and determinant of $J$! Quite a simplification. Why do we care? 
+
+* Call $\lambda_1$ the first eigenvalue with eigenvector $\vec{v}_1$ and the second eigenvalue $\lambda_2$ with eigenvector  $\vec{v}_2$. 
+
+* We saw that solutions to 1D linear equations $x’=\lambda x$ looked like $x(t)=ce^{\lambda t}$. That motivates us to guess the answer here 
+
+  $$\vec{x}(t) = c_1 \vec{v}_1 e^{\lambda_1 t} + c_2 \vec{v}_2 e^{\lambda_2 t}.$$
+
+* You don’t need to know how to derive this but we can take it for granted in our class. It tells us everything we need to know. 
+
+* We now want to understand the behavior of this system… What does $e^{\lambda t}$ do? We have to remember that $\lambda$ might be complex, $\lambda = \alpha + \beta i$. What does $e^{(\alpha+\beta i )t}$ do as a function of $t$? 
+
+* Well, we can use a trick here. Euler’s formula says $e^{i\theta} = \cos \theta + i \sin \theta$. So that gives us the intuition that $e^{(\alpha + \beta i)t}   = e^{\alpha t} e^{i\beta t}$.  The $e^{i\beta t}$ part becomes $\cos$ and $\sin$, or oscillations. The $e^{\alpha t}$ part is what matters. 
+
+* If $\alpha<0$ our solutions decay. If $\alpha>0$ our solutions grow. Therefore, whether our solution is *stable* or not depends on the *real part of the eigenvalues*. 
+
+* **This all seems overwhelming if you’ve never seen it but next we will categorize everything with a simple calculation**.
+
+* Remember we want to know what the roots of $0 = \lambda^2 - T\lambda - D$ look like. The quadratic equation says $\lambda_{1,2} \propto T \pm \sqrt{T^2-4D}$. 
+
+* If $D<0$ then these are necessarily distinct roots (of opposite signs). That means we have one growing and one shrinking exponential. Therefore these grow! These are called *saddles*.
+
+* $D>0$ is the more interesting investigation. 
+
+* We have *distinct real roots* if $T^2-4D>0$ and $T>0$. In this case, $\lambda_1 >0$ and $\lambda_2>0$. Our solution grows. Unstable! If $T^2-4D>0$ and $T<0$ then we have two negative roots, our solution shrinks. 
+
+* What about if $T^2-4D<0$? Now we have complex roots. These lead to *oscillations*. If the real part is positive, our oscillations *grow*, if they are negative, they shrink. 
+
+* If $T=0$ we get purely oscillatory (complex) solutions. 
+
+* This idea is called the **trace-determinant plane**. The punchline is: you don’t need to know any linear algebra to understand what the solutions do. All you need to do is compute $\det J$ and $\operatorname{tr}J$ and you can immediately read off what the solutions do.
+
+  ![](trdet.png)
+
+  
+
+- The ones in boxes we will not discuss in class, but the remaining ones you should know! 
+
+- Let’s go back to that old example. Take $\bar{x}= 0, \bar{y}=0$. Let’s compute $J$. Remember $f= x^2+xy-x$ and $g=yx-y^2-y$.  That gives us $\partial_x f = 2x + y - 1$, $\partial_y f = x$, $\partial_x g = y$, $\partial_y g = x-2y-1$. Putting this together, our Jacobian at $\bar{x}=0,\bar{y}=0$ is the matrix $J=\begin{bmatrix} -1 & 0\\ 0 & -1 \end{bmatrix}$. This has $D=1$ and $T=-2$. Since $T^2>4D$ and $D>0$ and $T<0$ That means we are a stable sink! 
+
+- The book also has a nice summary (that uses slightly different notation but you get the idea)
+
+  ![](table_51.png)
+
+- This is all you need to know about linear ODEs! Do not worry if you did not take MATH 3D and do not know more.
+
+  ## Phase Plane Analysis
+
+  
+
+- I want to return to talking about a generic 2D system
+  $$
+  dx/dt = f(x,y)\\dy/dt = g(x,y).
+  $$
+
+- We just talked a lot about “zooming in” to equilibria to determine their local behavior, but we want a more wholistic understanding of how to study these systems.
+
+- A method of “sketching” solutions to understand them is called the **phase plane**. The idea is this: rather than think about $t$ vs $x$ and $t$ vs $y$, let’s instead think about what solutions do in the $x-y$ plane. This is a little odd at first!
+
+- How do we do this? We think about each “point” in the $x,y$ plane as having a “direction” determined by the derivatives evaluated there 
+
+  ![](deriv_at_pt.png)
+
+- That vector is exactly $\vec{v}=(dx/dt, dy/dt)$. 
+
+- We can draw these! Take $x’ = xy-y, y’=xy-x$. Pick points and compute these.
+
+  ![](draw_dirfield.png)
+
+- This is tedious! Computers are better at it. Let them do it. 
+
+  ![](dirfield2.png)
+
+- What is the second plot? Those are solutions! The ones we care about. If you pick any point, you can think about that as the initial condition, and then follow the directions to get both $x(t)$ and $y(t)$ that satisfy our differential equations. We see this has 2 equilibria. Maybe more? We had to use a computer… What if there were parameters? We need a better way.
+
+  ## Nullclines
+
+  
+
+- Nullclines are a way of thinking about equilibria in the phase plane. 
+
+- Remember equilibria are defined by 
+  $$
+  0 = f(\bar{x},\bar{y}) \\  0 = g(\bar{x},\bar{y})
+  $$
+  
+
+- Typically we want the values that solve these simultaneously, but let’s forget that for a second. Instead, let’s find the values that solve one. And then the values that solve the other. And what do we care about? Where they **intersect**, as these spots solve both. 
+
+- Back to our previous example, we have
+
+  ![](nullcline0.png)
+
+so drawing this, 
+
+![](nullcline1.png)
+
+- And we see we do really find the intersections! How did we draw the little arrows? Plugging in those values along the null clues.
+
+- An important thing to remember **we need the intersections of the x and y nullclines for equilibria**: that is, intersections between the $x$-nullclines *do not* produce equilibria in general. 
+
+- Another example. $x’ = x+y^2, y=x+y$. 
+
+  ![](nullcline2.png)
