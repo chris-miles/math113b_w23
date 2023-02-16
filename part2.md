@@ -164,6 +164,20 @@ $$
 
 - Many papers will assume this form because it leads to more interesting behavior but lacks a molecular explanation. Unless you have reason to believe that 2 molecules are binding at one time, there is really no sincere justification to include this. 
 
-  
+  ## Genetic switch
 
-  
+- Let's use the Michaelis-Menten rate in a model of something else. 
+
+- We talk about genes being "on" or "off", or "expressed" or "not expressed". These are very binary descriptions. Yet, many things we talk about in our class are concentrations. How do you get such binary behavior from these ingredients? This is a **very simple** model that explains it. There are many interesting variants and this is just meant to be a "toy" warmup to these ideas.
+
+  <img src="gene.png" style="zoom:50%;" />
+
+- $$
+  \frac{dg}{dt} = k_1 s - k_2 g + \frac{Kg^2}{k_n + g^2}.
+  $$
+
+- Call the whole right hand side $dg/dt = f(g)$. What are the possible behaviors? 
+
+- <img src="switch_scenarios.png" style="zoom:50%;" />
+
+- We can figure this out without even really needing to calculate anything. This is why I tried to convey at the beginning of our class that I believe this is more of a "philosophy" of thinking about biology rather than a specific technical skillset. Yes, of course there are some technical skills, but I would rather you start thinking this way than be able to do hard calculations! 
