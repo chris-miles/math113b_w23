@@ -1,4 +1,5 @@
 # Math 113B - Math Biology, W23
+
 ## Part 1
 
 ### Logistics
@@ -480,7 +481,6 @@ $$
   0 = f(\bar{x},\bar{y}) \\  0 = g(\bar{x},\bar{y})
   $$
   
-
 - Typically we want the values that solve these simultaneously, but let’s forget that for a second. Instead, let’s find the values that solve one. And then the values that solve the other. And what do we care about? Where they **intersect**, as these spots solve both. 
 
 - Back to our previous example, we have
@@ -495,6 +495,54 @@ so drawing this,
 
 - An important thing to remember **we need the intersections of the x and y nullclines for equilibria**: that is, intersections between the $x$-nullclines *do not* produce equilibria in general. 
 
-- Another example. $x’ = x+y^2, y=x+y$. 
+- Consider another example, $x’ = x(-y+1-x)$ and $y’=y(x+1-y)$. 
 
-  ![](nullcline2.png)
+- We can draw the nullclines:![](nullcline2.png)
+- From this we can figure out behavior of solutions! Pick a point and follow the arrows.
+- ![](nullcline3.png)
+
+- Let’s just do another example. Even easier.  $x’ = 5x-2xy$. And $y’ = -y +xy$. 
+
+  ![](nullcline4.png)
+
+![](nullcline5.png)
+
+### Back to the chemostat
+
+- Why was it useful that we learned how to do phase plane analysis? This framework is generally helpful for understanding behavior of systems (and how they might change). Most systems will not be simple ones with just numbers but rather with parameters. 
+
+- Remember the chemostat model 
+
+   $$\frac{dN}{dt} = \frac{K_\max C}{K_n+C} N - \frac{FN}{V}\\\frac{dC}{dt} = -\alpha\frac{K_\max C}{K_n+C} N - \frac{FC}{V} + \frac{FC_0}{V}.$$
+
+- We saw from numerical simulations that sometimes all the bacteria died in the long run, and sometimes they did not. Can we understand this using phase plane analysis? *Yes* but it's messy. 
+
+- We first draw the nullclines. The $N$-nullclines are the easier of the two. We find them by setting   $\frac{dN}{dt} = 0= \frac{K_\max C}{K_n+C} N - \frac{FN}{V}$. We can factor out an $N$ and immediately conclude this is when $N=0$ or when $C=(F K_n)/(-F + K_\max V)$. If we draw $N$ on the horizontal axis and $C$ on the vertical, this is a vertical (at $N=0$) and horizontal line respectively (at a value we can call $C^\star$).
+
+- The $C$ nullcline is messier. It occurs when $$\frac{dC}{dt} =0 = -\alpha\frac{K_\max C}{K_n+C} N - \frac{FC}{V} + \frac{FC_0}{V}.$$
+
+- It's not totally obvious what this curve (or curves) looks like since we can't immediately solve for $C$ or $N$. It's open-ended how to proceed. We could solve for either. Solving for $N$ is a little easier, and yields $$N = \frac{F (C_0-C) (C+K_n)}{\alpha  C K_\max V}$$. This isn't a horizontal or vertical line, it's an actual curve. 
+
+- We can intuit its behavior by thinking about some extreme scenarios. When $N=0$, this can only occur when $C=C_0$ (everything else in the expression is positive). Therefore, we know one point is $N=0, C=C_0$.  What happens aside from this? Note that as $C$ gets larger, $N$ gets smaller. This is enough information for us to draw our nullclines. 
+
+  <img src="chemo_null.png" alt="chemo_null" style="zoom:50%;" />
+
+- One technical note here is how we did we know whether $C^\star$ was above or below $C_0$? If we think about the reality of this problem: $C_0$ is the max concentration that can occur since this is the concentration of the feeder tank. Therefore, the steady-state concentration must be below this, so we know to draw that line below the value $(0, C_0)$. 
+
+- This reveals a lot about our system: the two equilibria correspond to the two states we had imagined. How do we know when each is stable? 
+
+- Call $E_0$ the equilibrium at $(0,C_0)$ and $E_1$ the equilibrium at $(N^\star, C^\star)$. Then, we can compute the Jacobian of our system and plug in these values. 
+
+- After we do all this (I am not showing it because it's messy but you can easily use Mathematica), the eigenvalues of $J(E_0)$ are pretty intuitive. They are $\lambda_1^0 = -F/V$ and $\lambda_2^0 = (C_0 K_\max)/(C_0 + K_n) - F/V$. We know stability corresponds to when (the real part) of our eigenvalues is negative. Here, we have real eigenvalues so this just corresponds to when the eigenvalues themselves are negative. When is this? The first one is always negative since $F>0$ and $V>0$. This is intuitive! No matter what, there is always a "direction" from which the die-out equilibrium is stable. Why? If we start with 0 bacteria, we always end up in the die-out state. Therefore this is the "stable" direction. But we want the other direction to be UNSTABLE, so $E_1$ can be stable. This means we want a **saddle**. 
+
+- How do we make the second eigenvalue non-negative? $ (C_0 K_\max)/(C_0 + K_n) - F/V >0$. We could solve for anything here but I think it's most instructive to solve for $F$ because you could imagine that is a thing we have control over. Doing some algebra, we find  that we need 
+
+  $$ 0 < F < \frac{C_0 K_\max V}{C_0 + Kn}.$$
+
+  Is this plausible? It says we need some flow. That's true. Otherwise we don't have a chemostat. But we don't want TOO MUCH flow. 
+
+- For the sake of thoroughness, we also need to check when the eigenvalues at the other equilibrium are both negative. These are quite messy. But it turns out the eigenvalues of $J(E_1)$ are $\lambda_1^1 = -F/V$ (always negative), and the other is $\lambda_2^1 = -\frac{(F-K_\max V) (F (C_0+K_n)-C_0 K_\max V)}{K_\max K_n V^2}$.  If we want to make this $<0$ and do some algebra, we get the same condition! $$ 0 < F < \frac{C_0 K_\max V}{C_0 + Kn}.$$
+
+- Therefore, our chemostat sustains stable growth if this inequality is true, and so long as $C^\star < C_0$. 
+
+- Yes this was a bit complicated, but did we have a shot of getting this answer from just simulating in Python alone? No. This is the importance of pen-and-paper analysis in this context! 
