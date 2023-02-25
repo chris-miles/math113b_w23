@@ -137,7 +137,6 @@ $$
   \frac{dp}{dt} &=   \kappa_1 x_1 + \kappa_2 x_2 .
   $$
   
-
 - Yet again, we can go through the similar analysis where we note that the total number of receptors is still conserved, so $x_0+x_1+x_2=r$, and the products are downstream, so we can eliminate almost all of our equations. Now we can only eliminate $x_0$ but then we can make the **quasi-steady-state** assumption $dx_1/dt=0$ and $dx_2/dt=0$ and we are left with an ugly ODE for $c$ of the form 
   $$
   \frac{dc}{dt} = \frac{-rc(\kappa_1 K_m'+\kappa_2c)}{K_mK_m' + K_m'c+c^2},
@@ -180,4 +179,183 @@ $$
 
 - <img src="switch_scenarios.png" style="zoom:50%;" />
 
+  
+
+- How did we get these drawings? Superimpose the parts of $f$: $k_1s$ is just a constant that shifts the curve up or down $-k_2g$ is a decreasing line, and the last term is a “sigmoid” or an S-shaped curve. 
+
+- If you add these up, you get the shapes you see above and depending on the signal level $s$ you can get 3 equilibria, with 2 being stable! This is a “gene toggle” or a “toggle switch”. 
+
+- Also interestingly, if you give a cell a high $s$ and then remove it, it stays on! This is a form of cellular “memory”. 
+
+- Note the special sauce of this model: a (very) non-linear, positive feedback term. 
+
 - We can figure this out without even really needing to calculate anything. This is why I tried to convey at the beginning of our class that I believe this is more of a "philosophy" of thinking about biology rather than a specific technical skillset. Yes, of course there are some technical skills, but I would rather you start thinking this way than be able to do hard calculations! 
+
+## Chapter 6 - Population Models
+
+- Why are population models interesting? Let’s start with the most famous figure in math biology (I think). 
+
+- In the 1800s and 1900s, a company called the Hudson Bay Company of Canada acquired pelts of both lynxes and snowshoe hairs. The number of pelts they retrieved in a year we can use as a proxy for the total population of each species. 
+
+  ![](lynxhare.png)
+
+- They took this data over 90 years and found really interesting trends: oscillations!
+
+- If you were in a bad year you might think that the species were going extinct, but we clearly see they were not.
+
+- What causes these oscillations? Is it the hunting? Weather? Can we explain it, to get a better idea of what controls the populations?
+
+- These are called “predator-prey” models.
+
+### Predator-Prey
+
+- The most classical model of predator-prey are called the “Lotka-Volterra” equations. We’ll derive and analyze them here. Originally, Volterra wanted to understand why fish populations seemed to oscillate in the Mediterranean (he was Italian).
+
+-  Here are the most basic assumptions:
+
+  - Prey grow in an unlimited way when predators do not keep them under
+    control.
+  - Predators depend on the presence of their prey to survive.
+
+  - The rate of predation depends on the likelihood that a victim is encountered by
+    a predator.
+
+  - The growth rate of the predator population is proportional to food intake (rate
+    of predation
+
+- We can translate this into a mathematical model for $x$, the prey (hares), and $y$ the predators. 
+  $$
+  dx/dt = ax - bxy,    \qquad dy/dt = -cy + dxy.
+  $$
+
+- What do the parameters represent? $a$ is the birth rate of the prey, and $b$ is how quickly they interact. $c$ is the natural death rate of the predators, and $d$ is how much offspring they get from interacting.
+
+- The parameters $b,d$ are a little odd but you can think of it as $b/d$ is the efficiency of predation: the efficiency of converting 1 unit of prey into predator. 
+
+- Let’s turn the crank on our linear stability analysis! We have two equilibria, $(0,0)$ and $(c/d, a/b)$. The Jacobian is always $J=\begin{bmatrix} a-by & -bx \\\ dy & dx-c\end{bmatrix}$.  Plugging in our two equilibria, we find $J = \begin{bmatrix} a & 0 \\ 0 & -c \end{bmatrix}$ and $J= \begin{bmatrix} 0 & -bc/d \\ da/b & 0 \end{bmatrix}$. These have eigenvalues $\lambda_{1,2} = a,-c$ and for the first (a saddle) and $\lambda_{1,2} = \pm \sqrt{ca} i$ for the second ( a center). 
+
+- These results are a little weird. Note that the steady state of the prey isn’t even determined by any of its parameters but rather $c/d$, parameters associated with the predator. 
+
+- What controls the oscillations? When $ca$ is larger, the lifespan is shorter so the oscillations become faster. 
+
+  ![](lotka_phase.png)
+
+- This model is a little unrealistic since the prey grow without bound. Suppose instead we change the $x$ equation to be $dx/dt = ax(K-x)/x - bxy$.  Now the prey have a max population. What happens in this case? This will be the homework question. 
+
+- You’ll note we were a little shady about how to prove this was really oscillatory behavior, but we’ll study this in more depth next chapter. 
+
+- There are many variants on Lotka-Volterra! ![](lotka_variants.png)
+
+  ### Species in competition
+
+  
+
+- Instead of predator-prey, we could ask: what if two species are in competition for the same food? 
+
+- This is also originated by Lotka-Volterra, and sometimes called “competitive Lotka-Volterra”. 
+  $$
+  \begin{aligned}
+  \frac{d N_1}{d t} & =r_1 N_1 \frac{\kappa_1-N_1-\beta_{12} N_2}{\kappa_1} \\
+  \frac{d N_2}{d t} & =r_2 N_2 \frac{\kappa_2-N_2-\beta_{21} N_1}{\kappa_2}
+  \end{aligned}
+  $$
+
+- The motivation for this is typical logistic growth: $dx/dt = rx(K-x)/K$ where $K$ is the carrying capacity and $r$ is the intrinsic growth rate. Now, the second term gets modified by both populations because they are competing for food in the same environment. 
+
+- We won’t do the analysis in-class but you can see your book if this sounds cool. It turns out, depending on parameters, you can get co-existence or winner-takes-all.
+
+  ![](lotka_compete.png)
+
+- This is important because, for instance, many microbiological species are competing for food. For instance, there are famous studies in yeast:
+
+  ![](mixed_yeast.png)
+
+- You can see that one at a time, the populations grow larger, but in competition they steady-state to a lower value. This is co-existence.
+
+### Infectious disease models
+
+- Suppose we wanted to model an epidemic. Let’s start with a model for a viral infection. Call $x$ the population of healthy individuals (the hosts) and $y$ the viral population. 
+
+-  For simplicity, let’s start with the assumptions
+
+  1. There is a constant human birth rate $\alpha$.
+
+  2. Viral infection causes an increased mortality due to disease, so $g(y) > 0$.
+  3. Reproduction of viral particles depends on human presence.
+  4. In the absence of human hosts, virus particles "die" or become nonviable at
+    rate $\gamma$.
+
+- Putting these together, we get 
+  $$
+  \begin{aligned}
+  & \frac{d x}{d t}=[\alpha-g(y)] x \\
+  & \frac{d y}{d t}=\beta x y-\gamma y .
+  \end{aligned}
+  $$
+
+- In particular, if we take $g(y) =y$, we get back **exactly** Lotka-Volterra! 
+
+- So this isn’t that helpful. Instead, we want to keep track of individuals being infected or not.
+
+- These date back to **Kermack-MacKendrick**  and keep track of **susceptible** and **infected** individuals (called an **SI** model), or SI and **recovered** (called **SIR**), or maybe some other population too. We can draw diagrams based on how we think the disease progresses.
+  ![](SIR_models.png)
+
+- Let’s study (a) first. These equations then are 
+  $$
+  \begin{aligned}
+  & \frac{d S}{d t}=-\beta I S, \\
+  & \frac{d I}{d t}=\beta I S-\nu I, \\
+  & \frac{d R}{d t}=\nu I .
+  \end{aligned}
+  $$
+
+- They share the nice property that $N=S+I+R$ is conserved. 
+
+- Probably more realistic is (b), SIRS where recovered can become susceptible again. 
+
+- If you do the analysis on this one, you find that there are two steady states: a disease-free state, and a diseased state. Ultimately the linear stability analysis gives you that the disease will **not** die out if $N\beta/\nu>1$. How do we interpret this? Sometimes this is called $R_0$. Although not totally obvious, this is effectively the number (on average), one individual will infect. How do we see this? $\beta/\nu$ is the fraction of the population that will come into contact with an infected individual. 
+
+- There are endless variations on these, depending on the disease you are interested in.
+- There’s also more modern questions of: how do you even estimate $R_0$? 
+- How do vaccines play into this? Are all individuals the same? 
+
+## Chapter 8 - Oscillations, rhythms in biology
+
+- I want to at least mention this last chapter because I think the math is a little different. Linear stability analysis and nullclines do not quite get us all the way there to understand oscillations.
+
+- Yet, oscillations are everywhere in biology. Circadian rhythms, your heartbeat, brain waves, and so on. 
+
+- I am going to do this a little out of order. I think it’s easiest to see the math tools first, and then we’ll work on the actual models.
+
+- For this whole chapter we want only 2D things, so $dx/dt = F(x,y)$ and $dy/dt = G(x,y)$. 
+
+- **Existence of periodic solutions** can be boiled down to:
+
+   ``` If you can find a region in the xy phase plane containing a single repelling steady state(i.e. unstable node or spiral) and show that the arrows along the boundary of the region never point outwards, you may conclude that there must be at least one closed periodictrajectory inside the region.```
+
+- This is called the Poincare-Bendixson theorem. It is somewhat intuitive! 
+
+  ![](PB.png)
+
+  
+
+- Basically if there is nowhere for the trajectory to go, it must oscillate. Unfortunately, actually checking this is a bit tough. So there are two concrete ways to **rule out** this possibility.
+
+- **Bendixson's criterion:** Suppose $D$ is a simply connected region of the plane (that is, $D$ is a region without holes). If the expression $\partial F/\partial x + \partial G/ \partial y$ is not identically zero (i.e. is not zero for all $(x, y) \in D$) and does not change sign in $D$ , then there are no closed orbits in this region.
+
+- **Dulac's criterion:** Suppose $D$ is a simply connected region in the plane, and suppose  there exists a function $B(x, y)$, continuously differentiable on $D$, such that the expression $\partial(Bf)/\partial x + \partial (By)/\partial y$ has the same sign anywhere in $D$, then there are no closed orbits in this region. 
+
+- Let’s do an example or two. 
+  $$
+  \begin{array}{r}
+  x^{\prime}=x-y-x\left(x^2+y^2\right) \\
+  y^{\prime}=x+y-y\left(x^2+y^2\right)
+  \end{array}
+  $$
+
+- If we convert to polar coordinates, we get $r’ = r(1-r^2)$ and $\theta’ = 1$. We want to construct a region $K$ that satisfies the PB theorem. Take the annulus from $r=1/2$ to $r=2$. Check $r’<0$ for outer and $r’>0$ for inner. We’re done! 
+
+  ![](pb_ex.png)
+
+
+
